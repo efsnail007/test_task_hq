@@ -1,3 +1,10 @@
+<!--toc:start-->
+- [Тестовое задание](#тестовое-задание)
+  - [Построение архитектуры(3 балла)](#построение-архитектуры3-балла)
+  - [Написание запросов(7 баллов)](#написание-запросов7-баллов)
+- [Процесс запуска](#процесс-запуска)
+<!--toc:end-->
+
 # Тестовое задание
 
 - время выполнения ~ 8 часов для junior уровня
@@ -59,3 +66,25 @@ http://localhost:8000/app/api/v1/product/info/
 
 Мы ожидаем:
 Ссылка на публичный репозиторий в GitHub с выполненным проектом.
+
+# Процесс запуска
+
+```bash
+git clone https://github.com/efsnail007/test_task_hq.git
+```
+
+```bash
+cd test_task_hq
+```
+
+```bash
+poetry install
+```
+
+```bash
+cd src/system_training
+python manage.py makemigrations
+python manage.py migrate
+python manage.py filling_db
+python manage.py runserver
+```
