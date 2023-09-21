@@ -13,11 +13,9 @@ class UserProductsAPIView(APIView):
             user = Account.objects.get(pk=pk)
         except Account.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        products = user.products.all()
         response = []
-        for product in products:
+        for product in user.products.all().prefetch_related("lessons"):
             for lesson in product.lessons.all():
-                print(lesson)
                 viewing = Viewing.objects.get(
                     user__id=user.pk, lesson__id=lesson.pk
                 )
