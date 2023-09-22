@@ -37,7 +37,7 @@ class Viewing(models.Model):
         (SEEN, "Seen"),
         (UNSEEN, "Unseen"),
     ]
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE)
     viewing_time = models.PositiveBigIntegerField(default=0)
     status = models.CharField(

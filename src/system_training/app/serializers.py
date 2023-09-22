@@ -7,7 +7,7 @@ class InfoProductsSerializer(serializers.ModelSerializer):
     kol_lessons_view = serializers.IntegerField(default=0)
     all_viewing_time = serializers.IntegerField(default=0)
     kol_student = serializers.IntegerField(default=0)
-    Percentage_product_purchase = serializers.IntegerField(default=0)
+    percentage_product_purchase = serializers.IntegerField(default=0)
 
     class Meta:
         model = Product
@@ -16,21 +16,21 @@ class InfoProductsSerializer(serializers.ModelSerializer):
             "kol_lessons_view",
             "all_viewing_time",
             "kol_student",
-            "Percentage_product_purchase",
+            "percentage_product_purchase",
         ]
 
 
 class UserProductsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Viewing
-        fields = ["user", "lesson", "viewing_time", "status"]
+        fields = ["account", "lesson", "viewing_time", "status"]
 
 
 class ProductLessonsSerializer(serializers.ModelSerializer):
     class Meta:
         model = Viewing
         fields = [
-            "user",
+            "account",
             "lesson",
             "viewing_time",
             "status",

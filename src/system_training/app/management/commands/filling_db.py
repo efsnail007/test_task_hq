@@ -23,6 +23,10 @@ class Command(BaseCommand):
         admin = Admin.objects.create(name="all")
         user_all = User.objects.create(name="all")
         product_all = Product.objects.create(name="all", proprietor_name=admin)
+        account_all = Account.objects.create(
+            user=user_all, login="login", password="password"
+        )
+        account_all.products.add(product_all)
         lesson_all = Lesson.objects.create(
             name="all", link_video="https://ya.ru/", duration=1000
         )
@@ -43,13 +47,13 @@ class Command(BaseCommand):
             )
             product.lessons.add(lesson, lesson_all)
             viewing1 = Viewing.objects.create(
-                user=user, lesson=lesson, viewing_time=i * 10 + 10
+                account=account, lesson=lesson, viewing_time=i * 10 + 10
             )
             viewing2 = Viewing.objects.create(
-                user=user, lesson=lesson_all, viewing_time=i * 10 + 10
+                account=account, lesson=lesson_all, viewing_time=i * 10 + 10
             )
             viewing3 = Viewing.objects.create(
-                user=user_all, lesson=lesson, viewing_time=i * 10 + 10
+                account=account_all, lesson=lesson, viewing_time=i * 10 + 10
             )
         self._add_status_viewing()
 

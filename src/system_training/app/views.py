@@ -1,3 +1,4 @@
+from django.db.models import Sum
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -17,7 +18,7 @@ class UserProductsAPIView(APIView):
         for product in user.products.all().prefetch_related("lessons"):
             for lesson in product.lessons.all():
                 viewing = Viewing.objects.get(
-                    user__id=user.pk, lesson__id=lesson.pk
+                    account__user__id=user.pk, lesson__id=lesson.pk
                 )
                 response.append(UserProductsSerializer(viewing).data)
         return Response(response, status=status.HTTP_201_CREATED)
@@ -33,7 +34,7 @@ class ProductLessonsAPIView(APIView):
         response = []
         for lesson in product.lessons.all():
             viewing = Viewing.objects.get(
-                user__id=user.pk, lesson__id=lesson.pk
+                account__user__id=user.pk, lesson__id=lesson.pk
             )
             response.append(ProductLessonsSerializer(viewing).data)
         return Response(response, status=status.HTTP_201_CREATED)
@@ -41,6 +42,25 @@ class ProductLessonsAPIView(APIView):
 
 class InfoProductsAPIView(APIView):
     def get(self, request):
-        products = Product.objects.all()
+        products = Product.objects.all().prefetch_related("lessons")
+        users = Account.objects.all()
+        for product in products:
+            kol_student = users.filter(products__pk=product.pk).count()
+            product.kol_student = kol_student
+            all_viewing_time = 0
+            kol_lessons_view = 0
+            for lesson in product.lessons.all():
+                viewings = Viewing.objects.filter(
+                    lesson__id=lesson.pk, account__products__pk=product.pk
+                )
+                kol_lessons_view = viewings.filter(status="se").count()
+                all_viewing_time += viewings.aggregate(Sum("viewing_time"))[
+                    "viewing_time__sum"
+                ]
+            product.kol_lessons_view = kol_lessons_view
+            product.all_viewing_time = all_viewing_time
+            product.percentage_product_purchase = round(
+                kol_student / users.count() * 100
+            )
         response = InfoProductsSerializer(products, many=True)
         return Response(response.data, status=status.HTTP_201_CREATED)
